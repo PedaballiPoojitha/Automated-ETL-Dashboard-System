@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -47,11 +48,14 @@ if uploaded_file:
         df_clean = df_clean[(z_scores < 3).all(axis=1)]
         st.success("✅ Outliers removed using Z-Score")
     elif method == "IQR":
-        Q1 = df_clean.quantile(0.25)
-        Q3 = df_clean.quantile(0.75)
+        numeric_df = df_clean.select_dtypes(include=np.number)
+        Q1 = numeric_df.quantile(0.25)
+        Q3 = numeric_df.quantile(0.75)
         IQR = Q3 - Q1
-        df_clean = df_clean[~((df_clean < (Q1 - 1.5 * IQR)) | (df_clean > (Q3 + 1.5 * IQR))).any(axis=1)]
-        st.success("✅ Outliers removed using IQR")
+        filter_mask = ~((numeric_df < (Q1 - 1.5 * IQR)) | (numeric_df > (Q3 + 1.5 * IQR))).any(axis=1)
+        outliers_removed = len(df_clean) - filter_mask.sum()
+        df_clean = df_clean[filter_mask]
+        st.success(f"✅ Outliers removed using IQR: {outliers_removed} rows dropped")
     st.dataframe(df_clean.head())
 
     # 4. SUMMARY STATS
