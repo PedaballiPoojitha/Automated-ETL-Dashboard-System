@@ -1,1 +1,2 @@
 # Automated-ETL-Dashboard-System
+The **Automated ETL + Dashboard System** is a Python-based application that automates data extraction, cleaning, transformation, and visualization in a single workflow. It enables users to upload datasets, preprocess data, detect outliers, and generate interactive dashboards instantly without writing any code, making data analysis faster, accurate, and user-friendly.
